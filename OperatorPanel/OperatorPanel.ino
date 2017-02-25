@@ -1,6 +1,7 @@
 #include <Joystick.h>
 
-
+//Written by Maya Yaakov 2/25/16
+//This is for the Operator Control panel used by team 2342 
 // Create the Joystick
 Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID, 
   JOYSTICK_TYPE_GAMEPAD, 32, 0,
