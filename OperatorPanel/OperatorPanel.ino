@@ -17,7 +17,18 @@ int PotY = A1;
 int FlyWheelSpeed = A2;
 int Turret = A3;
 
-volatile int *lastFlyWheelState;
+volatile int lastFlyWheelState = 0;
+volatile int lastLEDoutputState = 0;
+volatile int lastIndexerState = 0;
+volatile int lastShooterState = 0;
+volatile int lastClimberUpState = 0;
+volatile int lastClimberDownState = 0;
+volatile int lastAutonomousStartState = 0;
+volatile int lastAutonomousStopState = 0;
+volatile int lastPotXState = 0;
+volatile int lastPotYState = 0;
+volatile int lastFlyWheelSpeedState = 0;
+volatile int lastTurretState = 0;
 
 void setup() {
   // put your setup code here, to run once:
@@ -43,33 +54,62 @@ void setup() {
 }
 
 
-
-
 void loop() {
   // put your main code here, to run repeatedly:
   readButtonState(FlyWheel, 0, lastFlyWheelState);
+  readButtonState(Indexer, 2, lastIndexerState);
+  readButtonState(Shooter, 3, lastShooterState);
+  readButtonState(ClimberUp, 4, lastClimberUpState);
+  readButtonState(ClimberDown, 5, lastClimberDownState);
+  readButtonState(AutonomousStart, 6, lastAutonomousStartState);
+  readButtonState(AutonomousStop, 7, lastAutonomousStopState);
+  readPotState(PotX, 1, lastPotXState);
+  readPotState(PotY, 2, lastPotYState);
+  readPotState(FlyWheelSpeed, 3, lastFlyWheelSpeedState);
+  readPotState(Turret, 4, lastTurretState);
   
-  int KnobValue = analogRead(A0);
-  Serial.print(KnobValue);
-  Serial.print('\n');
-  Joystick.setXAxis(KnobValue);
-  Joystick.setYAxis(KnobValue);
-  Joystick.setZAxis(KnobValue);
-  Joystick.setRxAxis(KnobValue);
     
   }
 
- void readButtonState(int pin, int button, int *lastState) {
-  int currentState = !digitalRead(pin);
-  if (currentState != *lastState){
+ void readButtonState(int pin, int button, volatile int &lastState) {
+  int currentState = digitalRead(pin);
+  if (currentState != lastState){
     Joystick.setButton(button, currentState);
-    *lastState = currentState;
-    Serial.print("Button Press ");
-    Serial.print(button);
+    lastState = currentState;
+    Serial.print("Button Press "); 
+    Serial.print(button); 
     Serial.print(" ");
-    Serial.print(currentState);
+    Serial.print(currentState); 
     Serial.print('\n');
     }
     
   }
+  void readPotState(int pin, int axis, volatile int &lastState){
+    int currentValue = analogRead(pin);
+    
+    
+  if(currentValue != lastState){
+    if(axis == 1){
+       Joystick.setXAxis(currentValue);
+      }
+    else if(axis == 2){
+       Joystick.setYAxis(currentValue);
+      }
+    else if(axis == 3){
+       Joystick.setZAxis(currentValue);
+      }
+    else if(axis == 4){
+       Joystick.setRxAxis(currentValue);
+      }
+    
+    Serial.print("Pot ");
+    Serial.print(axis);
+    Serial.print(" ");
+    Serial.print(currentValue);
+    Serial.print(" ");
+    Serial.print(lastState);
+    Serial.print('\n');
+    lastState = currentValue;
+   }    
+ }
 
