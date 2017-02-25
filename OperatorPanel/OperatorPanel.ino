@@ -2,7 +2,12 @@
 
 
 // Create the Joystick
-Joystick_ Joystick;
+Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID, 
+  JOYSTICK_TYPE_GAMEPAD, 32, 0,
+  true, true, true, false, false, false,
+  false, true, false, false, false);
+  
+  //Joystick_ Joystick;
 
 int FlyWheel = 2;
 int LEDoutput = 13;
@@ -35,7 +40,7 @@ void setup() {
   pinMode(FlyWheel, INPUT);
   pinMode(LEDoutput, OUTPUT);
   pinMode(Indexer, INPUT);
-  pinMode(Shooter, INPUT);
+  pinMode(Shooter, INPUT); //Feeder
   pinMode(ClimberUp, INPUT);
   pinMode(ClimberDown, INPUT);
   pinMode(AutonomousStart, INPUT);
@@ -56,17 +61,17 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  readButtonState(FlyWheel, 0, lastFlyWheelState);
-  readButtonState(Indexer, 2, lastIndexerState);
-  readButtonState(Shooter, 3, lastShooterState);
-  readButtonState(ClimberUp, 4, lastClimberUpState);
-  readButtonState(ClimberDown, 5, lastClimberDownState);
-  readButtonState(AutonomousStart, 6, lastAutonomousStartState);
-  readButtonState(AutonomousStop, 7, lastAutonomousStopState);
+  readButtonState(FlyWheel, 1, lastFlyWheelState); // now using the on-off-on switch // Joy 6
+  readButtonState(Indexer, 2, lastIndexerState); // Joy 4
+  readButtonState(Shooter, 3, lastShooterState); // Joy 2 (Loader)
+  readButtonState(ClimberUp, 4, lastClimberUpState); // Joy 6 // now will be the 4th switch - Joy 3
+  readButtonState(ClimberDown, 5, lastClimberDownState); // Joy 5 // No longer being used
+  readButtonState(AutonomousStart, 6, lastAutonomousStartState); // Joy 8
+  readButtonState(AutonomousStop, 7, lastAutonomousStopState); // Joy 7
   readPotState(PotX, 1, lastPotXState);
   readPotState(PotY, 2, lastPotYState);
-  readPotState(FlyWheelSpeed, 3, lastFlyWheelSpeedState);
-  readPotState(Turret, 4, lastTurretState);
+  readPotState(FlyWheelSpeed, 4, lastFlyWheelSpeedState);
+  readPotState(Turret, 3, lastTurretState);
   
     
   }
@@ -99,7 +104,10 @@ void loop() {
        Joystick.setZAxis(currentValue);
       }
     else if(axis == 4){
-       Joystick.setRxAxis(currentValue);
+
+       //currentValue = currentValue/1023.0;
+       
+       Joystick.setThrottle(currentValue);
       }
     
     Serial.print("Pot ");
