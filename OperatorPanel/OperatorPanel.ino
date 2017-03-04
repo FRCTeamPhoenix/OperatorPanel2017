@@ -2,59 +2,95 @@
 
 //Written by Maya Yaakov 2/25/16
 //This is for the Operator Control panel used by team 2342 
+
 // Create the Joystick
+
+// Simple initial method
+//Joystick_ Joystick;
+
+// Needs to be declared with non-default constructor to set Axes and Gamepad 
+// profile in order for the driver station software to see the axes
 Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID, 
   JOYSTICK_TYPE_GAMEPAD, 32, 0,
   true, true, true, false, false, false,
   false, true, false, false, false);
   
-  //Joystick_ Joystick;
 
-int FlyWheel = 2;
-int LEDoutput = 13;
-int Indexer = 3;
-int Shooter = 4;
-int ClimberUp = 5;
-int ClimberDown = 6;
-int AutonomousStart = 7;
-int AutonomousStop = 8;
-int PotX = A0;
-int PotY = A1;
-int FlyWheelSpeed = A2;
-int Turret = A3;
 
-volatile int lastFlyWheelState = 0;
-volatile int lastLEDoutputState = 0;
-volatile int lastIndexerState = 0;
-volatile int lastShooterState = 0;
-volatile int lastClimberUpState = 0;
-volatile int lastClimberDownState = 0;
+int FlywheelAuto = 2;
+int FlywheelManual = 3;
+int Feeder = 4;
+int IndexerForward= 5;
+int IndexerBackward= 6;
+int Climber = 7;
+int SpareA = 8;
+int SpareB = 9;
+int AutonomousStart = 10;
+int AutonomousStop = 11;
+
+//
+int FlywheelTrim = A0;
+int TurretTrim = A1;
+int TurretRotation = A2;
+int FlywheelSpeed = A3;
+
+// TODO: Need to add Serial 7-segment Rx pin
+
+// TODO: Need to add LED output pins
+
+
+// Global state variables
+volatile int lastFlywheelAutoState = 0;
+volatile int lastFlywheelManualState = 0;
+volatile int lastFeederState = 0;
+volatile int lastIndexerForwardState = 0;
+volatile int lastIndexerBackwardState = 0;
+volatile int lastClimberState = 0;
+volatile int lastSpareAState = 0;
+volatile int lastSpareBState = 0;
 volatile int lastAutonomousStartState = 0;
 volatile int lastAutonomousStopState = 0;
-volatile int lastPotXState = 0;
-volatile int lastPotYState = 0;
-volatile int lastFlyWheelSpeedState = 0;
-volatile int lastTurretState = 0;
+volatile int lastFlywheelTrimState = 0;
+volatile int lastTurretTrimState = 0;
+volatile int lastFlywheelSpeedState = 0;
+volatile int lastTurretRotationState = 0;
+
 
 void setup() {
   // put your setup code here, to run once:
-  pinMode(FlyWheel, INPUT);
-  pinMode(LEDoutput, OUTPUT);
-  pinMode(Indexer, INPUT);
-  pinMode(Shooter, INPUT); //Feeder
-  pinMode(ClimberUp, INPUT);
-  pinMode(ClimberDown, INPUT);
+
+  // Set up switches
+  pinMode(FlywheelAuto, INPUT);
+  pinMode(FlywheelManual, INPUT);
+  pinMode(Feeder, INPUT); //Feeder
+  pinMode(IndexerForward, INPUT);
+  pinMode(IndexerBackward, INPUT);
+  pinMode(Climber, INPUT);
+  pinMode(SpareA, INPUT);
+  pinMode(SpareB, INPUT);
   pinMode(AutonomousStart, INPUT);
   pinMode(AutonomousStop, INPUT);
-  pinMode(PotX, INPUT);
-  pinMode(PotY, INPUT);
-  pinMode(FlyWheelSpeed, INPUT);
-  pinMode(Turret, INPUT);
+
+  // Set up pots
+  pinMode(FlywheelTrim, INPUT);
+  pinMode(TurretTrim, INPUT);
+  pinMode(TurretRotation, INPUT);
+  pinMode(FlywheelSpeed, INPUT);
+
+  // TODO: Need to add Serial 7-segment Rx pin
+
+  // TODO: Need to add LED output pins
+ 
   
+  
+  // Future possible interrupt method
   //attachInterrupt(FLyWheel )
   
   // Initialize Joystick Library
   Joystick.begin();
+
+  // Initialize serial for seven-segment display
+  // TODO set the pins
   Serial.begin(9600);
 
 }
@@ -62,18 +98,23 @@ void setup() {
 
 void loop() {
   // put your main code here, to run repeatedly:
-  readButtonState(FlyWheel, 1, lastFlyWheelState); // now using the on-off-on switch // Joy 6
-  readButtonState(Indexer, 2, lastIndexerState); // Joy 4
-  readButtonState(Shooter, 3, lastShooterState); // Joy 2 (Loader)
-  readButtonState(ClimberUp, 4, lastClimberUpState); // Joy 6 // now will be the 4th switch - Joy 3
-  readButtonState(ClimberDown, 5, lastClimberDownState); // Joy 5 // No longer being used
-  readButtonState(AutonomousStart, 6, lastAutonomousStartState); // Joy 8
-  readButtonState(AutonomousStop, 7, lastAutonomousStopState); // Joy 7
-  readPotState(PotX, 1, lastPotXState);
-  readPotState(PotY, 2, lastPotYState);
-  readPotState(FlyWheelSpeed, 4, lastFlyWheelSpeedState);
-  readPotState(Turret, 3, lastTurretState);
   
+  readButtonState(FlywheelAuto, 1, lastFlywheelAutoState); 
+  readButtonState(FlywheelManual, 2, lastFlywheelManualState); 
+  readButtonState(Feeder, 3, lastFeederState); 
+  readButtonState(IndexerForward, 4, lastIndexerForwardState); 
+  readButtonState(IndexerBackward, 5, lastIndexerBackwardState); 
+  readButtonState(Climber, 6, lastClimberState); 
+  readButtonState(SpareA, 7, lastSpareAState); 
+  readButtonState(SpareB, 8, lastSpareBState); 
+  readButtonState(AutonomousStart, 9, lastAutonomousStartState); 
+  readButtonState(AutonomousStop, 10, lastAutonomousStopState); 
+
+  readPotState(FlywheelTrim, 1, lastFlywheelTrimState);
+  readPotState(TurretTrim, 2, lastTurretTrimState);
+  readPotState(TurretRotation, 3, lastTurretRotationState);
+  readPotState(FlywheelSpeed, 4, lastFlywheelSpeedState);
+
     
   }
 
@@ -93,6 +134,9 @@ void loop() {
   void readPotState(int pin, int axis, volatile int &lastState){
     int currentValue = analogRead(pin);
     
+  //TODO: Add LED output
+
+  //TODO: Add percent output
     
   if(currentValue != lastState){
     if(axis == 1){
@@ -110,7 +154,9 @@ void loop() {
        
        Joystick.setThrottle(currentValue);
       }
-    
+
+    // Enable for debugging
+    /*
     Serial.print("Pot ");
     Serial.print(axis);
     Serial.print(" ");
@@ -118,6 +164,8 @@ void loop() {
     Serial.print(" ");
     Serial.print(lastState);
     Serial.print('\n');
+    */
+    
     lastState = currentValue;
    }    
  }
