@@ -31,12 +31,15 @@ int AutonomousStop = 11;
 //
 int FlywheelTrim = A0;
 int TurretTrim = A1;
-int TurretRotation = A2;
-int FlywheelSpeed = A3;
+int TurretRotation = A5;
+int FlywheelSpeed = A2;
 
 // TODO: Need to add Serial 7-segment Rx pin
 
 // TODO: Need to add LED output pins
+int ledFlywheelTrim = 0;
+int ledTurretTrim = 1;
+int ledTurretRotation = A4;
 
 
 // Global state variables
@@ -80,6 +83,9 @@ void setup() {
   // TODO: Need to add Serial 7-segment Rx pin
 
   // TODO: Need to add LED output pins
+  pinMode(ledFlywheelTrim, OUTPUT);
+  pinMode(ledTurretTrim, OUTPUT);
+  pinMode(ledTurretRotation, OUTPUT);
  
   
   
@@ -141,12 +147,70 @@ void loop() {
   if(currentValue != lastState){
     if(axis == 1){
        Joystick.setXAxis(currentValue);
+       if((currentValue > 480) && (currentValue < 560)) {
+        digitalWrite(ledFlywheelTrim, HIGH);
+       }
+       else {
+        digitalWrite(ledFlywheelTrim, LOW);
+       }
+
+        // Enable for debugging
+        /*
+        Serial.print("Pot ");
+        Serial.print(axis);
+        Serial.print(" ");
+        Serial.print(currentValue);
+        Serial.print(" ");
+        Serial.print(lastState);
+        Serial.print('\n');
+        */
+        
+
       }
     else if(axis == 2){
        Joystick.setYAxis(currentValue);
+       if((currentValue > 480) && (currentValue < 560)) {
+        digitalWrite(ledTurretTrim, HIGH);
+       }
+       else {
+        digitalWrite(ledTurretTrim, LOW);
+       }
+       /*
+       if((currentValue > 480) && (currentValue <560)) {
+        analogWrite(ledTurretRotation, 255);
+       }
+       else{
+        analogWrite(ledTurretRotation, 0);
+       }
+       */
+              /*
+       Serial.print("Pot ");
+        Serial.print(axis);
+        Serial.print(" ");
+        Serial.print(currentValue);
+        Serial.print(" ");
+        Serial.print(lastState);
+        Serial.print('\n');
+        */
+
       }
     else if(axis == 3){
        Joystick.setZAxis(currentValue);
+       if((currentValue > 480) && (currentValue <560)) {
+        analogWrite(ledTurretRotation, 255);
+       }
+       else{
+        analogWrite(ledTurretRotation, 0);
+       }
+       
+       Serial.print("Pot ");
+        Serial.print(axis);
+        Serial.print(" ");
+        Serial.print(currentValue);
+        Serial.print(" ");
+        Serial.print(lastState);
+        Serial.print('\n');
+        
       }
     else if(axis == 4){
 
@@ -155,16 +219,6 @@ void loop() {
        Joystick.setThrottle(currentValue);
       }
 
-    // Enable for debugging
-    /*
-    Serial.print("Pot ");
-    Serial.print(axis);
-    Serial.print(" ");
-    Serial.print(currentValue);
-    Serial.print(" ");
-    Serial.print(lastState);
-    Serial.print('\n');
-    */
     
     lastState = currentValue;
    }    
