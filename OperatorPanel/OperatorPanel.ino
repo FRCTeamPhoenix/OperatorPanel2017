@@ -158,6 +158,10 @@ void loop() {
   if (currentState != lastState){
     Joystick.setButton(button, currentState);
     lastState = currentState;
+
+    // Debounce for 50 mS
+    delay(50);
+    
     /*
     Serial.print("Button Press "); 
     Serial.print(button); 
