@@ -23,8 +23,8 @@ int FlywheelManual = 3;
 int Feeder = 4;
 int IndexerForward= 5;
 int IndexerBackward= 6;
-int Climber = 7;
-int SpareA = 8;
+int Climber = 8;
+int SpareA = 7;
 int SpareB = 9;
 int AutonomousStart = 10;
 int AutonomousStop = 11;
@@ -134,19 +134,19 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   
-  readButtonState(FlywheelAuto, 1, lastFlywheelAutoState); 
-  readButtonState(FlywheelManual, 2, lastFlywheelManualState); 
-  readButtonState(Feeder, 3, lastFeederState); 
+  readButtonState(FlywheelAuto, 6, lastFlywheelAutoState); 
+  readButtonState(FlywheelManual, 5, lastFlywheelManualState); 
+  readButtonState(Feeder, 2, lastFeederState); 
   readButtonState(IndexerForward, 4, lastIndexerForwardState); 
-  readButtonState(IndexerBackward, 5, lastIndexerBackwardState); 
-  readButtonState(Climber, 6, lastClimberState); 
-  readButtonState(SpareA, 7, lastSpareAState); 
-  readButtonState(SpareB, 8, lastSpareBState); 
-  readButtonState(AutonomousStart, 9, lastAutonomousStartState); 
-  readButtonState(AutonomousStop, 10, lastAutonomousStopState); 
+  readButtonState(IndexerBackward, 7, lastIndexerBackwardState); 
+  readButtonState(Climber, 3, lastClimberState); 
+  readButtonState(SpareA, 1, lastSpareAState); 
+  readButtonState(SpareB, 10, lastSpareBState); 
+  readButtonState(AutonomousStart, 8, lastAutonomousStartState); 
+  readButtonState(AutonomousStop, 9, lastAutonomousStopState); 
 
-  readPotState(FlywheelTrim, 1, lastFlywheelTrimState);
-  readPotState(TurretTrim, 2, lastTurretTrimState);
+  readPotState(FlywheelTrim, 2, lastFlywheelTrimState);
+  readPotState(TurretTrim, 1, lastTurretTrimState);
   readPotState(TurretRotation, 3, lastTurretRotationState);
   readPotState(FlywheelSpeed, 4, lastFlywheelSpeedState);
 
@@ -171,58 +171,29 @@ void loop() {
   void readPotState(int pin, int axis, volatile int &lastState){
     int currentValue = analogRead(pin);
     
-  //TODO: Add LED output
-
-  //TODO: Add percent output
-    
+     
   if(currentValue != lastState){
     if(axis == 1){
        Joystick.setXAxis(currentValue);
-       if((currentValue > 480) && (currentValue < 560)) {
-        digitalWrite(ledFlywheelTrim, HIGH);
-       }
-       else {
-        digitalWrite(ledFlywheelTrim, LOW);
-       }
-
-        // Enable for debugging
-        /*
-        Serial.print("Pot ");
-        Serial.print(axis);
-        Serial.print(" ");
-        Serial.print(currentValue);
-        Serial.print(" ");
-        Serial.print(lastState);
-        Serial.print('\n');
-        */
-        
-
-      }
-    else if(axis == 2){
-       Joystick.setYAxis(currentValue);
        if((currentValue > 480) && (currentValue < 560)) {
         digitalWrite(ledTurretTrim, HIGH);
        }
        else {
         digitalWrite(ledTurretTrim, LOW);
        }
-       /*
-       if((currentValue > 480) && (currentValue <560)) {
-        analogWrite(ledTurretRotation, 255);
+
+ 
+
+      }
+    else if(axis == 2){
+       Joystick.setYAxis(currentValue);
+       if((currentValue > 480) && (currentValue < 560)) {
+        digitalWrite(ledFlywheelTrim, HIGH);
        }
-       else{
-        analogWrite(ledTurretRotation, 0);
+       else {
+        digitalWrite(ledFlywheelTrim, LOW);
        }
-       */
-              /*
-       Serial.print("Pot ");
-        Serial.print(axis);
-        Serial.print(" ");
-        Serial.print(currentValue);
-        Serial.print(" ");
-        Serial.print(lastState);
-        Serial.print('\n');
-        */
+    
 
       }
     else if(axis == 3){
@@ -233,29 +204,32 @@ void loop() {
        else{
         analogWrite(ledTurretRotation, 0);
        }
-       /*
-       Serial.print("Pot ");
-        Serial.print(axis);
-        Serial.print(" ");
-        Serial.print(currentValue);
-        Serial.print(" ");
-        Serial.print(lastState);
-        Serial.print('\n');
-        */
+    
         
       }
     else if(axis == 4){
 
-       //currentValue = currentValue/1023.0;
-       
-       Joystick.setThrottle(currentValue);
        int potValue = 1023 - currentValue;
+       
+       Joystick.setThrottle(potValue);
+       
        int scaledValue = (int) ((float) potValue/10.23);
        sprintf(tempString, "%3d ", (int) scaledValue);
        perDis.print(tempString);
+       
        delay(100);
       }
 
+      /* 
+      // For debugging
+      Serial.print("Pot ");
+      Serial.print(axis);
+      Serial.print(" ");
+      Serial.print(currentValue);
+      Serial.print(" ");
+      Serial.print(lastState);
+      Serial.print('\n');
+      */
     
     lastState = currentValue;
    }    
