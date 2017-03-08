@@ -18,11 +18,11 @@ Joystick_ Joystick(JOYSTICK_DEFAULT_REPORT_ID,
   
 
 
-int FlywheelAuto = 2;
-int FlywheelManual = 3;
+int FlywheelAuto = 3;
+int FlywheelManual = 2;
 int Feeder = 4;
-int IndexerForward= 5;
-int IndexerBackward= 6;
+int IndexerForward= 6;
+int IndexerBackward= 5;
 int Climber = 8;
 int SpareA = 7;
 int SpareB = 9;
@@ -134,16 +134,16 @@ void setup() {
 void loop() {
   // put your main code here, to run repeatedly:
   
-  readButtonState(FlywheelAuto, 6, lastFlywheelAutoState); 
-  readButtonState(FlywheelManual, 5, lastFlywheelManualState); 
-  readButtonState(Feeder, 2, lastFeederState); 
-  readButtonState(IndexerForward, 4, lastIndexerForwardState); 
-  readButtonState(IndexerBackward, 7, lastIndexerBackwardState); 
-  readButtonState(Climber, 3, lastClimberState); 
-  readButtonState(SpareA, 1, lastSpareAState); 
-  readButtonState(SpareB, 10, lastSpareBState); 
-  readButtonState(AutonomousStart, 8, lastAutonomousStartState); 
-  readButtonState(AutonomousStop, 9, lastAutonomousStopState); 
+  readButtonState(FlywheelAuto, 5, lastFlywheelAutoState); 
+  readButtonState(FlywheelManual, 4, lastFlywheelManualState); 
+  readButtonState(Feeder, 1, lastFeederState); 
+  readButtonState(IndexerForward, 3, lastIndexerForwardState); 
+  readButtonState(IndexerBackward, 6, lastIndexerBackwardState); 
+  readButtonState(Climber, 2, lastClimberState); 
+  readButtonState(SpareA, 0, lastSpareAState); 
+  readButtonState(SpareB, 9, lastSpareBState); 
+  readButtonState(AutonomousStart, 7, lastAutonomousStartState); 
+  readButtonState(AutonomousStop, 8, lastAutonomousStopState); 
 
   readPotState(FlywheelTrim, 2, lastFlywheelTrimState);
   readPotState(TurretTrim, 1, lastTurretTrimState);
